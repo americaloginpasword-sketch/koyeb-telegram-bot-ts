@@ -59,6 +59,9 @@ async function main() {
                 await bot.start({ drop_pending_updates: true });
               } else {
                 logger.info({ webhookUrl }, "Webhook mode configured externally");
+                // Настраиваем webhook
+                await bot.api.setWebhook(webhookUrl);
+                logger.info("Webhook set successfully");
               }
 
   // Graceful shutdown

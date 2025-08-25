@@ -56,6 +56,9 @@ async function main() {
     }
     else {
         logger.info({ webhookUrl }, "Webhook mode configured externally");
+        // Настраиваем webhook
+        await bot.api.setWebhook(webhookUrl);
+        logger.info("Webhook set successfully");
     }
     // Graceful shutdown
     const shutdown = async (signal) => {
