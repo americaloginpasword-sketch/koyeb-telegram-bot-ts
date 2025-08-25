@@ -87,7 +87,9 @@ export class GoogleSheetsAnalytics {
         }
         
         const updateRange = `A${userRowIndex + 1}:H${userRowIndex + 1}`;
-        await this.sheets.spreadsheets.values.update({
+        this.logger.info({ telegramId, postId, actionType, updateRange, updatedRow }, 'Attempting to update user action in Google Sheets');
+        
+        const response = await this.sheets.spreadsheets.values.update({
           spreadsheetId: this.config.sheetId,
           range: updateRange,
           valueInputOption: 'RAW',
@@ -95,7 +97,15 @@ export class GoogleSheetsAnalytics {
             values: [updatedRow],
           },
         });
-        this.logger.info({ telegramId, postId, actionType }, 'Updated user action in Google Sheets');
+        
+        this.logger.info({ 
+          telegramId, 
+          postId, 
+          actionType, 
+          response: response.data,
+          updatedRange: response.data.updates?.updatedRange,
+          updatedCells: response.data.updates?.updatedCells
+        }, 'Successfully updated user action in Google Sheets');
       } else {
         // Добавляем новую строку
         const newRow = [
@@ -122,7 +132,9 @@ export class GoogleSheetsAnalytics {
           });
         }
         
-        await this.sheets.spreadsheets.values.append({
+        this.logger.info({ telegramId, postId, actionType, newRow }, 'Attempting to append new user action to Google Sheets');
+        
+        const response = await this.sheets.spreadsheets.values.append({
           spreadsheetId: this.config.sheetId,
           range: 'A:H',
           valueInputOption: 'RAW',
@@ -130,7 +142,15 @@ export class GoogleSheetsAnalytics {
             values: [newRow],
           },
         });
-        this.logger.info({ telegramId, postId, actionType }, 'Added new user action to Google Sheets');
+        
+        this.logger.info({ 
+          telegramId, 
+          postId, 
+          actionType, 
+          response: response.data,
+          updatedRange: response.data.updates?.updatedRange,
+          updatedCells: response.data.updates?.updatedCells
+        }, 'Successfully added new user action to Google Sheets');
       }
     } catch (error) {
       this.logger.error({ error, action }, 'Failed to upsert user action to Google Sheets');
