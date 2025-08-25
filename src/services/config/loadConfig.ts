@@ -17,12 +17,12 @@ export async function loadAppConfig(configPath: string): Promise<AppConfig> {
   const data = parse(raw) as AppConfig;
   
   // Добавляем Google Sheets конфигурацию из переменных окружения
-  if (process.env.SHEET_ID && process.env.GOOGLE_SA_EMAIL && process.env.GOOGLE_SA_PRIVATE_KEY_PATH) {
+  if (process.env.SHEET_ID && process.env.GOOGLE_SA_EMAIL && process.env.GOOGLE_SA_PRIVATE_KEY) {
     data.analytics = {
       google_sheets: {
         sheet_id: process.env.SHEET_ID,
         service_account_email: process.env.GOOGLE_SA_EMAIL,
-        private_key_path: process.env.GOOGLE_SA_PRIVATE_KEY_PATH,
+        private_key: process.env.GOOGLE_SA_PRIVATE_KEY,
       },
     };
   }

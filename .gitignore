@@ -1,2 +1,37 @@
 # Игнорировать папку с ключами
 .secrets/
+
+# Игнорировать большие файлы
+*.mp4
+*.mov
+*.avi
+*.mkv
+*.zip
+*.rar
+*.7z
+
+# Игнорировать временные файлы
+*.tmp
+*.temp
+.DS_Store
+Thumbs.db
+
+# Игнорировать логи
+*.log
+logs/
+
+# Игнорировать node_modules и build
+node_modules/
+dist/
+build/
+
+# Игнорировать переменные окружения
+.env*
+!.env.example
+
+# НО включать изображения (если они не слишком большие)
+!public/images/**/*.jpg
+!public/images/**/*.jpeg
+!public/images/**/*.png
+!public/images/**/*.gif
+!public/images/**/*.webp

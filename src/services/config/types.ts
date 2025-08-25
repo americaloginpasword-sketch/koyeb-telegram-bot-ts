@@ -28,7 +28,7 @@ export interface AppConfig {
     google_sheets?: {
       sheet_id: string;
       service_account_email: string;
-      private_key_path: string;
+      private_key: string;
     };
   };
   public_base_url?: string;

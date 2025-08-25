@@ -21,7 +21,7 @@ export interface UserAction {
 export interface GoogleSheetsConfig {
   sheetId: string;
   serviceAccountEmail: string;
-  privateKeyPath: string;
+  privateKey: string;
 }
 
 export class GoogleSheetsAnalytics {
@@ -37,9 +37,11 @@ export class GoogleSheetsAnalytics {
 
   private initGoogleSheets() {
     try {
-      const privateKey = fs.readFileSync(this.config.privateKeyPath, 'utf8');
       const auth = new google.auth.GoogleAuth({
-        credentials: JSON.parse(privateKey),
+        credentials: {
+          client_email: this.config.serviceAccountEmail,
+          private_key: this.config.privateKey,
+        },
         scopes: ['https://www.googleapis.com/auth/spreadsheets'],
       });
 
