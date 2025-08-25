@@ -16,10 +16,19 @@ class GoogleSheetsAnalytics {
     }
     initGoogleSheets() {
         try {
+            // Исправляем формат private key
+            let privateKey = this.config.privateKey;
+            // Убираем кавычки если есть
+            if (privateKey.startsWith('"') && privateKey.endsWith('"')) {
+                privateKey = privateKey.slice(1, -1);
+            }
+            // Заменяем \n на реальные переносы строк
+            privateKey = privateKey.replace(/\\n/g, '\n');
+            this.logger.info('Processing private key for Google Sheets API');
             const auth = new googleapis_1.google.auth.GoogleAuth({
                 credentials: {
                     client_email: this.config.serviceAccountEmail,
-                    private_key: this.config.privateKey,
+                    private_key: privateKey,
                 },
                 scopes: ['https://www.googleapis.com/auth/spreadsheets'],
             });
