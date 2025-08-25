@@ -32,7 +32,11 @@ export function getSheetsClient(): sheets_v4.Sheets | null {
 
   serviceAccountEmail = creds.client_email || null;
   const scopes = ["https://www.googleapis.com/auth/spreadsheets"];
-  const auth = new google.auth.JWT(creds.client_email, undefined, creds.private_key, scopes);
+  const auth = new google.auth.JWT({
+    email: creds.client_email,
+    key: creds.private_key,
+    scopes: scopes
+  });
   sheetsClient = google.sheets({ version: "v4", auth });
   return sheetsClient;
 }
