@@ -33,7 +33,7 @@ function createBot(token, logger, appConfig, analytics) {
         scheduledNextByChat.set(chatId, timeout);
         logger.info({ chatId, nextPostId }, "Scheduled next post in 20 seconds");
     }
-    (0, loadConfig_1.loadPostsConfig)(appConfig.content.posts_file, "config/content/posts.schema.yaml")
+    (0, loadConfig_1.loadPostsConfig)(appConfig.content.posts_file, appConfig.content.posts_schema || "config/content/posts.schema.yaml")
         .then((cfg) => {
         logger.info({ posts: cfg.posts.length }, "Posts config loaded");
     })
@@ -132,7 +132,7 @@ function createBot(token, logger, appConfig, analytics) {
     async function sendPost(chatId, postId) {
         const startTime = Date.now();
         try {
-            const cfg = await (0, loadConfig_1.loadPostsConfig)(appConfig.content.posts_file, "config/content/posts.schema.yaml");
+            const cfg = await (0, loadConfig_1.loadPostsConfig)(appConfig.content.posts_file, appConfig.content.posts_schema || "config/content/posts.schema.yaml");
             const post = cfg.posts.find((p) => p.id === postId) ?? cfg.posts[0];
             const keyboard = buildKeyboardFromPost(post);
             const caption = post.image?.caption && post.image.caption.length > 0
@@ -212,7 +212,7 @@ function createBot(token, logger, appConfig, analytics) {
         try {
             const postId = Number(ctx.match?.[1]);
             await logButtonClick(ctx.from?.id || 0, ctx.from?.username, postId, "material");
-            const cfg = await (0, loadConfig_1.loadPostsConfig)(appConfig.content.posts_file, "config/content/posts.schema.yaml");
+            const cfg = await (0, loadConfig_1.loadPostsConfig)(appConfig.content.posts_file, appConfig.content.posts_schema || "config/content/posts.schema.yaml");
             const post = cfg.posts.find((p) => p.id === postId);
             const materialBtn = post?.buttons.find((b) => b.action === "material");
             const materialUrl = materialBtn?.url || "https://example.com";
@@ -239,7 +239,7 @@ function createBot(token, logger, appConfig, analytics) {
         try {
             const postId = Number(ctx.match?.[1]);
             await logButtonClick(ctx.from?.id || 0, ctx.from?.username, postId, "community");
-            const cfg = await (0, loadConfig_1.loadPostsConfig)(appConfig.content.posts_file, "config/content/posts.schema.yaml");
+            const cfg = await (0, loadConfig_1.loadPostsConfig)(appConfig.content.posts_file, appConfig.content.posts_schema || "config/content/posts.schema.yaml");
             const post = cfg.posts.find((p) => p.id === postId);
             const communityBtn = post?.buttons.find((b) => b.action === "community");
             const message = communityBtn?.message ??

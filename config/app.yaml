@@ -21,6 +21,7 @@ support:
 
 content:
   posts_file: config/content/posts.yaml
+  posts_schema: config/content/posts.schema.yaml
 
 public_base_url: http://localhost:3000
 

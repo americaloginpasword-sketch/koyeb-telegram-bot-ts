@@ -41,7 +41,7 @@ export function createBot(token: string, logger: Logger, appConfig: AppConfig, a
     logger.info({ chatId, nextPostId }, "Scheduled next post in 20 seconds");
   }
 
-  loadPostsConfig(appConfig.content.posts_file, "config/content/posts.schema.yaml")
+  loadPostsConfig(appConfig.content.posts_file, appConfig.content.posts_schema || "config/content/posts.schema.yaml")
     .then((cfg) => {
       logger.info({ posts: cfg.posts.length }, "Posts config loaded");
     })
@@ -153,7 +153,7 @@ export function createBot(token: string, logger: Logger, appConfig: AppConfig, a
     try {
       const cfg = await loadPostsConfig(
         appConfig.content.posts_file,
-        "config/content/posts.schema.yaml",
+        appConfig.content.posts_schema || "config/content/posts.schema.yaml",
       );
       const post = cfg.posts.find((p) => p.id === postId) ?? cfg.posts[0];
       const keyboard = buildKeyboardFromPost(post);
@@ -245,7 +245,7 @@ export function createBot(token: string, logger: Logger, appConfig: AppConfig, a
       
       const cfg = await loadPostsConfig(
         appConfig.content.posts_file,
-        "config/content/posts.schema.yaml",
+        appConfig.content.posts_schema || "config/content/posts.schema.yaml",
       );
       const post = cfg.posts.find((p) => p.id === postId);
       const materialBtn = post?.buttons.find((b) => (b as any).action === "material") as any;
@@ -277,7 +277,7 @@ export function createBot(token: string, logger: Logger, appConfig: AppConfig, a
       
       const cfg = await loadPostsConfig(
         appConfig.content.posts_file,
-        "config/content/posts.schema.yaml",
+        appConfig.content.posts_schema || "config/content/posts.schema.yaml",
       );
       const post = cfg.posts.find((p) => p.id === postId);
       const communityBtn = post?.buttons.find((b) => (b as any).action === "community") as any;

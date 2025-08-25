@@ -22,6 +22,7 @@ export interface AppConfig {
   };
   content: {
     posts_file: string;
+    posts_schema?: string;
   };
   analytics?: {
     google_sheets?: {
