@@ -17,11 +17,6 @@ export async function loadAppConfig(configPath: string): Promise<AppConfig> {
   const data = parse(raw) as AppConfig;
   
   // Добавляем Google Sheets конфигурацию из переменных окружения
-  console.log('Checking Google Sheets environment variables:');
-  console.log('SHEET_ID:', process.env.SHEET_ID ? 'SET' : 'NOT SET');
-  console.log('GOOGLE_SA_EMAIL:', process.env.GOOGLE_SA_EMAIL ? 'SET' : 'NOT SET');
-  console.log('GOOGLE_SA_PRIVATE_KEY:', process.env.GOOGLE_SA_PRIVATE_KEY ? 'SET' : 'NOT SET');
-  
   if (process.env.SHEET_ID && process.env.GOOGLE_SA_EMAIL && process.env.GOOGLE_SA_PRIVATE_KEY) {
     data.analytics = {
       google_sheets: {
@@ -30,9 +25,6 @@ export async function loadAppConfig(configPath: string): Promise<AppConfig> {
         private_key: process.env.GOOGLE_SA_PRIVATE_KEY,
       },
     };
-    console.log('Google Sheets analytics configured');
-  } else {
-    console.log('Google Sheets analytics NOT configured - missing environment variables');
   }
   
   return data;
