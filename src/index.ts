@@ -12,10 +12,19 @@ import { loadAppConfig } from "./services/config/loadConfig";
 import { GoogleSheetsAnalytics } from "./services/analytics/googleSheets";
 
 async function main() {
+  console.log('Starting Neurohod bot...');
+  console.log('Environment variables:');
+  console.log('NODE_ENV:', process.env.NODE_ENV);
+  console.log('PORT:', process.env.PORT);
+  console.log('TELEGRAM_BOT_TOKEN:', process.env.TELEGRAM_BOT_TOKEN ? 'SET' : 'NOT SET');
+  console.log('TELEGRAM_WEBHOOK_URL:', process.env.TELEGRAM_WEBHOOK_URL ? 'SET' : 'NOT SET');
+  
   dotenv.config();
   const logger = createLogger();
 
+  console.log('Loading app config...');
   const appConfig = await loadAppConfig("config/app.yaml");
+  console.log('App config loaded successfully');
 
   // Инициализируем Google Sheets Analytics если настроено
   let analytics: GoogleSheetsAnalytics | undefined;
@@ -82,7 +91,7 @@ async function main() {
 }
 
 main().catch((err) => {
-  // eslint-disable-next-line no-console
-  console.error(err);
+  console.error('Fatal error during startup:', err);
+  console.error('Stack trace:', err.stack);
   process.exit(1);
 });
