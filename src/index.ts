@@ -51,13 +51,15 @@ async function main() {
     logger.info({ port: env.PORT }, "HTTP server listening");
   });
 
-  const webhookUrl = env.TELEGRAM_WEBHOOK_URL;
-  if (!webhookUrl) {
-    logger.info("Starting bot in long polling mode (no TELEGRAM_WEBHOOK_URL set)");
-    await bot.start({ drop_pending_updates: true });
-  } else {
-    logger.info({ webhookUrl }, "Webhook mode configured externally");
-  }
+                const webhookUrl = env.TELEGRAM_WEBHOOK_URL;
+              if (!webhookUrl) {
+                logger.info("Starting bot in long polling mode (no TELEGRAM_WEBHOOK_URL set)");
+                // Добавляем задержку для избежания конфликтов
+                await new Promise(resolve => setTimeout(resolve, 2000));
+                await bot.start({ drop_pending_updates: true });
+              } else {
+                logger.info({ webhookUrl }, "Webhook mode configured externally");
+              }
 
   // Graceful shutdown
   const shutdown = async (signal: string) => {
