@@ -10,32 +10,35 @@ import { createHttpServer } from "./http/server";
 import { createBot } from "./bot/bot";
 import { loadAppConfig } from "./services/config/loadConfig";
 import { GoogleSheetsAnalytics } from "./services/analytics/googleSheets";
+import { loadEnvironment, isGoogleSheetsConfigured, getGoogleSheetsConfig, logEnvironmentStatus } from "./services/config/environment";
 
 async function main() {
   dotenv.config();
+  
+  // Загружаем и валидируем переменные окружения
+  const env = loadEnvironment();
   const logger = createLogger();
+  
+  // Логируем статус конфигурации
+  logEnvironmentStatus(env);
 
   const appConfig = await loadAppConfig("config/app.yaml");
 
   // Инициализируем Google Sheets Analytics если настроено
   let analytics: GoogleSheetsAnalytics | undefined;
-  if (appConfig.analytics?.google_sheets) {
+  if (isGoogleSheetsConfigured(env)) {
     try {
-      analytics = new GoogleSheetsAnalytics(
-        {
-          sheetId: appConfig.analytics.google_sheets.sheet_id,
-          serviceAccountEmail: appConfig.analytics.google_sheets.service_account_email,
-          privateKey: appConfig.analytics.google_sheets.private_key,
-        },
-        logger
-      );
-      logger.info("Google Sheets Analytics initialized");
+      const sheetsConfig = getGoogleSheetsConfig(env);
+      if (sheetsConfig) {
+        analytics = new GoogleSheetsAnalytics(sheetsConfig, logger);
+        logger.info("Google Sheets Analytics initialized");
+      }
     } catch (error) {
       logger.error({ error }, "Failed to initialize Google Sheets Analytics");
     }
   }
 
-  const bot = createBot(process.env.TELEGRAM_BOT_TOKEN ?? "", logger, appConfig, analytics);
+  const bot = createBot(env.TELEGRAM_BOT_TOKEN, logger, appConfig, analytics);
 
   const app = createHttpServer({
     logger,
@@ -44,12 +47,11 @@ async function main() {
     analytics,
   });
 
-  const port = Number(process.env.PORT ?? 3000);
-  const server = app.listen(port, () => {
-    logger.info({ port }, "HTTP server listening");
+  const server = app.listen(env.PORT, () => {
+    logger.info({ port: env.PORT }, "HTTP server listening");
   });
 
-  const webhookUrl = process.env.TELEGRAM_WEBHOOK_URL;
+  const webhookUrl = env.TELEGRAM_WEBHOOK_URL;
   if (!webhookUrl) {
     logger.info("Starting bot in long polling mode (no TELEGRAM_WEBHOOK_URL set)");
     await bot.start({ drop_pending_updates: true });
