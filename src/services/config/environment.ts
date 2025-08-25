@@ -96,6 +96,9 @@ export function logEnvironmentStatus(config: EnvironmentConfig): void {
   console.log(`  PORT: ${config.PORT}`);
   console.log(`  TELEGRAM_BOT_TOKEN: ${config.TELEGRAM_BOT_TOKEN ? 'SET' : 'NOT SET'}`);
   console.log(`  TELEGRAM_WEBHOOK_URL: ${config.TELEGRAM_WEBHOOK_URL ? 'SET' : 'NOT SET'}`);
+  console.log(`  SHEET_ID: ${config.SHEET_ID ? 'SET' : 'NOT SET'}`);
+  console.log(`  GOOGLE_SA_EMAIL: ${config.GOOGLE_SA_EMAIL ? 'SET' : 'NOT SET'}`);
+  console.log(`  GOOGLE_SA_PRIVATE_KEY: ${config.GOOGLE_SA_PRIVATE_KEY ? 'SET' : 'NOT SET'}`);
   console.log(`  Google Sheets Analytics: ${isGoogleSheetsConfigured(config) ? 'CONFIGURED' : 'NOT CONFIGURED'}`);
   console.log(`  LOG_LEVEL: ${config.LOG_LEVEL}`);
   console.log(`  VERIFY_WEBHOOKS: ${config.VERIFY_WEBHOOKS}`);

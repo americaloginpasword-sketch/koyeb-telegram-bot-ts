@@ -35,3 +35,8 @@ build/
 !public/images/**/*.png
 !public/images/**/*.gif
 !public/images/**/*.webp
+
+# Тестовые файлы
+test.env
+test-google-sheets.js
+test-sheets.sh

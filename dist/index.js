@@ -14,45 +14,40 @@ const server_1 = require("./http/server");
 const bot_1 = require("./bot/bot");
 const loadConfig_1 = require("./services/config/loadConfig");
 const googleSheets_1 = require("./services/analytics/googleSheets");
+const environment_1 = require("./services/config/environment");
 async function main() {
-    console.log('Starting Neurohod bot...');
-    console.log('Environment variables:');
-    console.log('NODE_ENV:', process.env.NODE_ENV);
-    console.log('PORT:', process.env.PORT);
-    console.log('TELEGRAM_BOT_TOKEN:', process.env.TELEGRAM_BOT_TOKEN ? 'SET' : 'NOT SET');
-    console.log('TELEGRAM_WEBHOOK_URL:', process.env.TELEGRAM_WEBHOOK_URL ? 'SET' : 'NOT SET');
     dotenv_1.default.config();
+    // Загружаем и валидируем переменные окружения
+    const env = (0, environment_1.loadEnvironment)();
     const logger = (0, logger_1.createLogger)();
-    console.log('Loading app config...');
+    // Логируем статус конфигурации
+    (0, environment_1.logEnvironmentStatus)(env);
     const appConfig = await (0, loadConfig_1.loadAppConfig)("config/app.yaml");
-    console.log('App config loaded successfully');
     // Инициализируем Google Sheets Analytics если настроено
     let analytics;
-    if (appConfig.analytics?.google_sheets) {
+    if ((0, environment_1.isGoogleSheetsConfigured)(env)) {
         try {
-            analytics = new googleSheets_1.GoogleSheetsAnalytics({
-                sheetId: appConfig.analytics.google_sheets.sheet_id,
-                serviceAccountEmail: appConfig.analytics.google_sheets.service_account_email,
-                privateKey: appConfig.analytics.google_sheets.private_key,
-            }, logger);
-            logger.info("Google Sheets Analytics initialized");
+            const sheetsConfig = (0, environment_1.getGoogleSheetsConfig)(env);
+            if (sheetsConfig) {
+                analytics = new googleSheets_1.GoogleSheetsAnalytics(sheetsConfig, logger);
+                logger.info("Google Sheets Analytics initialized");
+            }
         }
         catch (error) {
             logger.error({ error }, "Failed to initialize Google Sheets Analytics");
         }
     }
-    const bot = (0, bot_1.createBot)(process.env.TELEGRAM_BOT_TOKEN ?? "", logger, appConfig, analytics);
+    const bot = (0, bot_1.createBot)(env.TELEGRAM_BOT_TOKEN, logger, appConfig, analytics);
     const app = (0, server_1.createHttpServer)({
         logger,
         bot,
         appConfig,
         analytics,
     });
-    const port = Number(process.env.PORT ?? 3000);
-    const server = app.listen(port, () => {
-        logger.info({ port }, "HTTP server listening");
+    const server = app.listen(env.PORT, () => {
+        logger.info({ port: env.PORT }, "HTTP server listening");
     });
-    const webhookUrl = process.env.TELEGRAM_WEBHOOK_URL;
+    const webhookUrl = env.TELEGRAM_WEBHOOK_URL;
     if (!webhookUrl) {
         logger.info("Starting bot in long polling mode (no TELEGRAM_WEBHOOK_URL set)");
         await bot.start({ drop_pending_updates: true });
