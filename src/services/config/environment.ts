@@ -29,6 +29,17 @@ export interface EnvironmentConfig {
  * Загружает и валидирует переменные окружения
  */
 export function loadEnvironment(): EnvironmentConfig {
+  // Обрабатываем private key
+  let privateKey = process.env.GOOGLE_SA_PRIVATE_KEY;
+  if (privateKey) {
+    // Убираем кавычки если есть
+    if (privateKey.startsWith('"') && privateKey.endsWith('"')) {
+      privateKey = privateKey.slice(1, -1);
+    }
+    // Заменяем \n на реальные переносы строк
+    privateKey = privateKey.replace(/\\n/g, '\n');
+  }
+
   const config: EnvironmentConfig = {
     NODE_ENV: process.env.NODE_ENV || 'development',
     PORT: Number(process.env.PORT) || 3000,
@@ -36,7 +47,7 @@ export function loadEnvironment(): EnvironmentConfig {
     TELEGRAM_WEBHOOK_URL: process.env.TELEGRAM_WEBHOOK_URL,
     SHEET_ID: process.env.SHEET_ID,
     GOOGLE_SA_EMAIL: process.env.GOOGLE_SA_EMAIL,
-    GOOGLE_SA_PRIVATE_KEY: process.env.GOOGLE_SA_PRIVATE_KEY,
+    GOOGLE_SA_PRIVATE_KEY: privateKey,
     LOG_LEVEL: process.env.LOG_LEVEL || 'info',
     VERIFY_WEBHOOKS: process.env.VERIFY_WEBHOOKS === 'true',
   };

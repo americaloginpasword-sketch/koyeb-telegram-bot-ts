@@ -37,23 +37,10 @@ export class GoogleSheetsAnalytics {
 
   private initGoogleSheets() {
     try {
-      // Исправляем формат private key
-      let privateKey = this.config.privateKey;
-      
-      // Убираем кавычки если есть
-      if (privateKey.startsWith('"') && privateKey.endsWith('"')) {
-        privateKey = privateKey.slice(1, -1);
-      }
-      
-      // Заменяем \n на реальные переносы строк
-      privateKey = privateKey.replace(/\\n/g, '\n');
-      
-      this.logger.info('Processing private key for Google Sheets API');
-      
       const auth = new google.auth.GoogleAuth({
         credentials: {
           client_email: this.config.serviceAccountEmail,
-          private_key: privateKey,
+          private_key: this.config.privateKey,
         },
         scopes: ['https://www.googleapis.com/auth/spreadsheets'],
       });
