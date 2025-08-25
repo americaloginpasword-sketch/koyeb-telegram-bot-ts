@@ -25,7 +25,7 @@ async function main() {
             analytics = new googleSheets_1.GoogleSheetsAnalytics({
                 sheetId: appConfig.analytics.google_sheets.sheet_id,
                 serviceAccountEmail: appConfig.analytics.google_sheets.service_account_email,
-                privateKeyPath: appConfig.analytics.google_sheets.private_key_path,
+                privateKey: appConfig.analytics.google_sheets.private_key,
             }, logger);
             logger.info("Google Sheets Analytics initialized");
         }
