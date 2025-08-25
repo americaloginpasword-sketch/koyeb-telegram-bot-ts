@@ -1,0 +1,107 @@
+# @file: config/content/posts.schema.yaml
+# @description: JSON Schema (YAML) для конфигурации постов Neurohod (6 постов прогрева + 6-й продающий)
+# @dependencies: config/content/posts.example.yaml, config/app.yaml
+# @created: 2025-08-19
+
+$schema: "https://json-schema.org/draft/2020-12/schema"
+title: Neurohod Posts Config
+type: object
+required: [version, posts]
+properties:
+  version:
+    type: string
+  posts:
+    type: array
+    minItems: 6
+    maxItems: 6
+    items:
+      type: object
+      required: [id, text_key, image, buttons]
+      properties:
+        id:
+          type: integer
+          minimum: 1
+          maximum: 6
+        text_key:
+          type: string
+          description: Ключ текста поста (контент в внешнем источнике или локализация)
+        image:
+          type: object
+          required: [url]
+          properties:
+            url:
+              type: string
+              description: URL изображения или Telegram File ID
+            caption:
+              type: string
+              description: Необязательная подпись
+        buttons:
+          type: array
+          minItems: 1
+          maxItems: 4
+          items:
+            type: object
+            oneOf:
+              - $ref: "#/$defs/materialButton"
+              - $ref: "#/$defs/supportButton"
+              - $ref: "#/$defs/communityButton"
+              - $ref: "#/$defs/paymentButton"
+              - $ref: "#/$defs/webinarButton"
+$defs:
+  materialButton:
+    type: object
+    required: [label, action, url]
+    properties:
+      label:
+        type: string
+        description: Текст кнопки (допускаются эмодзи)
+      action:
+        type: string
+        const: material
+      url:
+        type: string
+        description: Ссылка на Я.Диск/Google Docs/Sheets
+  supportButton:
+    type: object
+    required: [label, action, url]
+    properties:
+      label:
+        type: string
+        description: Текст кнопки (допускаются эмодзи)
+      action:
+        type: string
+        const: support
+      url:
+        type: string
+        description: Ссылка на чат/личку поддержки
+  communityButton:
+    type: object
+    required: [label, action, message]
+    properties:
+      label:
+        type: string
+        description: Текст кнопки (допускаются эмодзи)
+      action:
+        type: string
+        const: community
+      message:
+        type: string
+        description: Текст ответа при нажатии
+  paymentButton:
+    type: object
+    required: [label, action]
+    properties:
+      label:
+        type: string
+        description: Текст кнопки (допускаются эмодзи)
+      action:
+        type: string
+        const: payment
+      price:
+        type: integer
+        description: Сумма в валюте
+      currency:
+      provider:
+        type: string
+        description: Провайдер оплаты (например, yookassa)        type: string
+        description: Трёхбуквенный код валюты (например, RUB)

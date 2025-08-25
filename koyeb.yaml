@@ -1,0 +1,39 @@
+# @file: koyeb.yaml
+# @description: Конфигурация деплоя для Koyeb
+# @created: 2025-01-27
+
+name: neurohod-bot
+service:
+  name: neurohod-bot
+  type: web
+  ports:
+    - port: 3000
+      protocol: http
+  routes:
+    - path: /
+      protocol: http
+  env:
+    - name: NODE_ENV
+      value: production
+    - name: PORT
+      value: "3000"
+  secrets:
+    - name: telegram-bot-token
+      key: TELEGRAM_BOT_TOKEN
+    - name: telegram-webhook-url
+      key: TELEGRAM_WEBHOOK_URL
+    - name: google-sheet-id
+      key: SHEET_ID
+    - name: google-sa-email
+      key: GOOGLE_SA_EMAIL
+    - name: google-sa-private-key
+      key: GOOGLE_SA_PRIVATE_KEY
+  build:
+    builder: dockerfile
+    dockerfile: Dockerfile
+  healthcheck:
+    path: /healthz
+    port: 3000
+    interval: 30s
+    timeout: 10s
+    retries: 3

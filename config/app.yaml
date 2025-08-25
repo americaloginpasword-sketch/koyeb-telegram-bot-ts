@@ -1,0 +1,33 @@
+# @file: config/app.yaml
+# @description: Глобальная конфигурация приложения Neurohod
+# @dependencies: config/content/posts.example.yaml, config/content/posts.schema.yaml
+# @created: 2025-08-19
+
+version: "1.0.0"
+
+telegram:
+  bot_token: ${TELEGRAM_BOT_TOKEN}
+  webhook_url: ${TELEGRAM_WEBHOOK_URL}
+  allowed_updates: [message, callback_query]
+
+payment:
+  provider: yookassa
+  currency: RUB
+  amount: 8700
+  geo: RU
+
+support:
+  contact_url: https://t.me/ArthurMacArthur
+
+content:
+  posts_file: config/content/posts.example.yaml
+
+public_base_url: http://localhost:3000
+
+rate_limit:
+  user_per_minute: 20
+  burst: 5
+
+security:
+  verify_webhooks: true
+  allowed_webhook_sources: [telegram, yookassa]
