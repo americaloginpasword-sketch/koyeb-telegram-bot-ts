@@ -20,7 +20,7 @@ support:
   contact_url: https://t.me/ArthurMacArthur
 
 content:
-  posts_file: config/content/posts.example.yaml
+  posts_file: config/content/posts.yaml
 
 public_base_url: http://localhost:3000
 
