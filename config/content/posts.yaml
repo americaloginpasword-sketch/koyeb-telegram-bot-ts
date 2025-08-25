@@ -124,7 +124,7 @@ posts:
   - id: 4
     text_key: post_4
     image:
-      url: https://example.com/images/post4.jpg
+      url: https://photos.app.goo.gl/xe8BnAfWo8ibiEPH7
       caption: |
         📝 <b>ИИ - это шаблонность?</b>
 
