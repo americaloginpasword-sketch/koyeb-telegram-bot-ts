@@ -102,4 +102,13 @@ export function logEnvironmentStatus(config: EnvironmentConfig): void {
   console.log(`  Google Sheets Analytics: ${isGoogleSheetsConfigured(config) ? 'CONFIGURED' : 'NOT CONFIGURED'}`);
   console.log(`  LOG_LEVEL: ${config.LOG_LEVEL}`);
   console.log(`  VERIFY_WEBHOOKS: ${config.VERIFY_WEBHOOKS}`);
+  
+  // Дополнительная отладка
+  console.log('--- DEBUG INFO ---');
+  console.log(`  process.env.GOOGLE_SA_PRIVATE_KEY exists: ${!!process.env.GOOGLE_SA_PRIVATE_KEY}`);
+  console.log(`  process.env.GOOGLE_SA_PRIVATE_KEY length: ${process.env.GOOGLE_SA_PRIVATE_KEY?.length || 0}`);
+  console.log(`  process.env.GOOGLE_SA_PRIVATE_KEY starts with: ${process.env.GOOGLE_SA_PRIVATE_KEY?.substring(0, 20) || 'N/A'}`);
+  console.log(`  config.GOOGLE_SA_PRIVATE_KEY length: ${config.GOOGLE_SA_PRIVATE_KEY?.length || 0}`);
+  console.log(`  config.GOOGLE_SA_PRIVATE_KEY starts with: ${config.GOOGLE_SA_PRIVATE_KEY?.substring(0, 20) || 'N/A'}`);
+  console.log('--- END DEBUG ---');
 }
